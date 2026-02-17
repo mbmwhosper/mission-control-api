@@ -172,6 +172,23 @@ async function loadDashboard() {
     const res = await fetch(`${API_URL}/api/dashboard`);
     const data = await res.json();
     updateDashboard(data);
+    
+    // Load real trading data
+    try {
+      const tradingAccount = await fetch(`${API_URL}/api/trading/account`).then(r => r.json());
+      const tradingPositions = await fetch(`${API_URL}/api/trading/positions`).then(r => r.json());
+      const tradingStats = await fetch(`${API_URL}/api/trading/stats`).then(r => r.json());
+      
+      data.trading = {
+        equity: tradingAccount.equity,
+        positions: tradingPositions.length,
+        status: tradingAccount.status === 'ACTIVE' ? 'active' : 'idle',
+        stats: tradingStats
+      };
+      updateTradingData(data.trading);
+    } catch (e) {
+      console.log('Trading bot not available yet');
+    }
   } catch (err) {
     console.error('Failed to load dashboard:', err);
   }
@@ -185,18 +202,25 @@ function updateDashboard(data) {
   const progress = Math.min((data.cost_today / 5) * 100, 100);
   document.getElementById('cost-progress').style.width = `${progress}%`;
   
-  // Trading
-  document.getElementById('trading-equity').textContent = `$${data.trading.equity.toLocaleString()}`;
-  document.getElementById('trading-positions').textContent = data.trading.positions;
-  
-  const statusEl = document.getElementById('trading-status');
-  statusEl.textContent = data.trading.status.charAt(0).toUpperCase() + data.trading.status.slice(1);
-  statusEl.classList.toggle('active', data.trading.status === 'active');
-  
   // Tasks
   document.getElementById('tasks-queued').textContent = data.task_summary.queued;
   document.getElementById('tasks-active').textContent = data.task_summary.active;
   document.getElementById('tasks-completed').textContent = data.task_summary.completed;
+}
+
+function updateTradingData(trading) {
+  // Trading - Real data from Alpaca
+  document.getElementById('trading-equity').textContent = `$${trading.equity.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  document.getElementById('trading-positions').textContent = trading.positions;
+  
+  const statusEl = document.getElementById('trading-status');
+  statusEl.textContent = trading.status === 'active' ? '🟢 Active' : '⚪ Idle';
+  statusEl.classList.toggle('active', trading.status === 'active');
+  
+  // Show trading stats if available
+  if (trading.stats) {
+    console.log('📊 Trading Stats:', trading.stats);
+  }
 }
 
 // Activities

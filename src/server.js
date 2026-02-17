@@ -600,6 +600,47 @@ app.post('/api/sync', async (req, res) => {
   }
 });
 
+// Trading Bot Integration
+app.get('/api/trading/account', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:3456/api/account');
+    const data = await response.json();
+    res.json(data);
+  } catch (e) {
+    res.status(503).json({ error: 'Trading bot not available', message: e.message });
+  }
+});
+
+app.get('/api/trading/positions', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:3456/api/positions');
+    const data = await response.json();
+    res.json(data);
+  } catch (e) {
+    res.status(503).json({ error: 'Trading bot not available', message: e.message });
+  }
+});
+
+app.get('/api/trading/stats', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:3456/api/stats');
+    const data = await response.json();
+    res.json(data);
+  } catch (e) {
+    res.status(503).json({ error: 'Trading bot not available', message: e.message });
+  }
+});
+
+app.get('/api/trading/config', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:3456/api/config');
+    const data = await response.json();
+    res.json(data);
+  } catch (e) {
+    res.status(503).json({ error: 'Trading bot not available', message: e.message });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', clients: clients.size });
