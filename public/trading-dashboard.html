@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Dashboard - Real-Time</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0a0f">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0a0a0f;
+      color: #e0e0ff;
+      padding: 20px;
+      padding-bottom: 100px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 16px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(135deg, #00d4aa, #00e5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .timestamp {
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    .portfolio-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.85em;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 2em;
+      font-weight: bold;
+      background: linear-gradient(135deg, #00d4aa, #00e5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-value.positive {
+      color: #00d4aa;
+    }
+
+    .stat-value.negative {
+      color: #ff6b6b;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(0, 212, 170, 0.5);
+      color: #00d4aa;
+    }
+
+    .positions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .position-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(0, 212, 170, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .position-card:hover {
+      border-color: rgba(0, 212, 170, 0.8);
+      box-shadow: 0 0 30px rgba(0, 212, 170, 0.2);
+    }
+
+    .position-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .ticker {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #00d4aa;
+    }
+
+    .position-info {
+      display: grid;
+      gap: 8px;
+      font-size: 0.95em;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(0, 212, 170, 0.1);
+    }
+
+    .info-label {
+      color: #aaa;
+    }
+
+    .info-value {
+      font-weight: bold;
+      color: #e0e0ff;
+    }
+
+    .pnl-positive {
+      color: #00d4aa;
+    }
+
+    .pnl-negative {
+      color: #ff6b6b;
+    }
+
+    .candidates-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .candidate-item {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .candidate-info {
+      flex: 1;
+    }
+
+    .candidate-symbol {
+      font-weight: bold;
+      color: #00d4aa;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+
+    .candidate-reason {
+      font-size: 0.9em;
+      color: #aaa;
+    }
+
+    .candidate-stats {
+      text-align: right;
+      color: #e0e0ff;
+    }
+
+    .change-positive {
+      color: #00d4aa;
+    }
+
+    .change-negative {
+      color: #ff6b6b;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .refresh-btn {
+      background: linear-gradient(135deg, #00d4aa, #00e5ff);
+      border: none;
+      color: #0a0a0f;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 212, 170, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .positions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚡ LIVE TRADING DASHBOARD</h1>
+      <p class="timestamp" id="timestamp">Loading...</p>
+    </header>
+
+    <div class="portfolio-stats">
+      <div class="stat-card">
+        <div class="stat-label">Portfolio Value</div>
+        <div class="stat-value" id="equity">$0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total P&L</div>
+        <div class="stat-value" id="totalPnl">$0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Positions</div>
+        <div class="stat-value" id="positionCount">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Cash Available</div>
+        <div class="stat-value" id="cash">$0</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">📊 Current Positions</h2>
+      <div class="positions-grid" id="positions-container">
+        <div class="no-data">Loading positions...</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">🔍 Next Trade Candidates</h2>
+      <div class="candidates-list" id="candidates-container">
+        <div class="no-data">Analyzing market opportunities...</div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="refresh-btn" onclick="refreshData()">🔄 Refresh Now</button>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = window.location.origin;
+    let autoRefreshInterval;
+
+    async function refreshData() {
+      try {
+        // Fetch account
+        const accountRes = await fetch(`${API_URL}/api/trading/account`);
+        const account = await accountRes.json();
+
+        // Fetch positions
+        const posRes = await fetch(`${API_URL}/api/trading/positions`);
+        const positions = await posRes.json();
+
+        // Fetch stats
+        const statsRes = await fetch(`${API_URL}/api/trading/stats`);
+        const stats = await statsRes.json();
+
+        updateDashboard(account, positions, stats);
+      } catch (e) {
+        console.error('Error fetching data:', e);
+        document.getElementById('positions-container').innerHTML = 
+          `<div class="no-data">Error loading data: ${e.message}</div>`;
+      }
+    }
+
+    function updateDashboard(account, positions, stats) {
+      // Update timestamp
+      document.getElementById('timestamp').textContent = 
+        new Date().toLocaleTimeString() + ' ET';
+
+      // Update portfolio stats
+      document.getElementById('equity').textContent = 
+        `$${parseFloat(account.equity).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+      document.getElementById('cash').textContent = 
+        `$${parseFloat(account.cash).toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+
+      // Calculate total P&L
+      const totalPnl = positions.reduce((sum, p) => sum + (p.unrealized_pl || 0), 0);
+      const pnlEl = document.getElementById('totalPnl');
+      pnlEl.textContent = `$${totalPnl.toFixed(2)}`;
+      pnlEl.className = totalPnl >= 0 ? 'stat-value positive' : 'stat-value negative';
+
+      document.getElementById('positionCount').textContent = positions.length;
+
+      // Render positions
+      if (positions.length === 0) {
+        document.getElementById('positions-container').innerHTML = 
+          '<div class="no-data">No active positions</div>';
+      } else {
+        document.getElementById('positions-container').innerHTML = positions.map(p => `
+          <div class="position-card">
+            <div class="position-header">
+              <div class="ticker">${p.symbol}</div>
+              <div class="info-value ${p.unrealized_pl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                ${p.unrealized_pl >= 0 ? '+' : ''}$${p.unrealized_pl.toFixed(2)}
+              </div>
+            </div>
+            <div class="position-info">
+              <div class="info-row">
+                <span class="info-label">Shares:</span>
+                <span class="info-value">${p.qty}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Entry Price:</span>
+                <span class="info-value">$${parseFloat(p.avg_entry_price).toFixed(2)}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Current Price:</span>
+                <span class="info-value">$${parseFloat(p.current_price).toFixed(2)}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Position Value:</span>
+                <span class="info-value">$${parseFloat(p.market_value).toFixed(2)}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Return %:</span>
+                <span class="info-value ${p.unrealized_plpc >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                  ${(p.unrealized_plpc * 100).toFixed(2)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render candidates (from stats if available)
+      if (stats && stats.candidates && stats.candidates.length > 0) {
+        document.getElementById('candidates-container').innerHTML = stats.candidates.map(c => `
+          <div class="candidate-item">
+            <div class="candidate-info">
+              <div class="candidate-symbol">${c.symbol}</div>
+              <div class="candidate-reason">${c.reason || 'Momentum opportunity'}</div>
+            </div>
+            <div class="candidate-stats">
+              <div class="change-${c.change >= 0 ? 'positive' : 'negative'}">
+                ${c.change >= 0 ? '+' : ''}${(c.change * 100).toFixed(2)}%
+              </div>
+              <div style="font-size: 0.85em; color: #aaa;">Volume: ${c.volume || 'N/A'}</div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        document.getElementById('candidates-container').innerHTML = 
+          '<div class="no-data">Scanning for next opportunities...</div>';
+      }
+    }
+
+    // Initial load
+    refreshData();
+
+    // Auto-refresh every 10 seconds
+    autoRefreshInterval = setInterval(refreshData, 10000);
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      clearInterval(autoRefreshInterval);
+    });
+  </script>
+</body>
+</html>
