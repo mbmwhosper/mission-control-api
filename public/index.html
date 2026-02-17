@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>Mission Control</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Liquid Glass Background -->
+  <div class="glass-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  
+  <!-- App -->
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="glass-nav">
+      <button class="nav-btn active" data-view="overview">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Overview</span>
+      </button>
+      <button class="nav-btn" data-view="workshop">
+        <span class="nav-icon">🛠️</span>
+        <span class="nav-label">Workshop</span>
+      </button>
+      <button class="nav-btn" data-view="intelligence">
+        <span class="nav-icon">🧠</span>
+        <span class="nav-label">Intelligence</span>
+      </button>
+      <button class="nav-btn" data-view="journal">
+        <span class="nav-icon">📔</span>
+        <span class="nav-label">Journal</span>
+      </button>
+      <button class="nav-btn" data-view="cron">
+        <span class="nav-icon">⏰</span>
+        <span class="nav-label">Cron</span>
+      </button>
+      <button class="nav-btn" data-view="api_usage">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">API</span>
+      </button>
+      <button class="nav-btn" data-view="chat">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Chat</span>
+        <span class="nav-badge" id="chat-badge">0</span>
+      </button>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Overview View -->
+      <section id="overview" class="view active">
+        <header class="view-header">
+          <h1>Mission Control</h1>
+          <div class="status-indicator">
+            <span class="status-dot online"></span>
+            <span class="status-text">Online</span>
+          </div>
+        </header>
+        
+        <!-- Cost Card -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Today's Cost</h2>
+            <span class="card-badge">Live</span>
+          </div>
+          <div class="metric-large">
+            <span class="metric-value" id="cost-today">$0.00</span>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" id="cost-progress"></div>
+              </div>
+              <span class="progress-label">of $5.00 daily budget</span>
+            </div>
+          </div>
+          <div class="metric-small">
+            <span class="label">Total spent</span>
+            <span class="value" id="cost-total">$0.00</span>
+          </div>
+        </div>
+        
+        <!-- Trading Card -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Trading Bot</h2>
+            <span class="status-pill" id="trading-status">Idle</span>
+          </div>
+          <div class="metric-row">
+            <div class="metric">
+              <span class="label">Equity</span>
+              <span class="value" id="trading-equity">$100,000</span>
+            </div>
+            <div class="metric">
+              <span class="label">Positions</span>
+              <span class="value" id="trading-positions">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tasks Card -->
+        <div class="glass-card">
+          <div class="card-header">
+            <h2>Tasks</h2>
+          </div>
+          <div class="task-stats">
+            <div class="stat">
+              <span class="count" id="tasks-queued">0</span>
+              <span class="label">Queued</span>
+            </div>
+            <div class="stat">
+              <span class="count active" id="tasks-active">0</span>
+              <span class="label">Active</span>
+            </div>
+            <div class="stat">
+              <span class="count completed" id="tasks-completed">0</span>
+              <span class="label">Done</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Activity Feed -->
+        <div class="glass-card activity-card">
+          <div class="card-header">
+            <h2>Live Activity</h2>
+            <span class="pulse-indicator"></span>
+          </div>
+          <div class="activity-list" id="activity-list">
+            <div class="activity-empty">No recent activity</div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Workshop View -->
+      <section id="workshop" class="view">
+        <header class="view-header">
+          <h1>Workshop</h1>
+          <div class="quick-add-wrapper">
+            <input type="text" id="quick-add" class="quick-add" placeholder="Add task...">
+          </div>
+        </header>
+        
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-tag active" data-filter="all">All</button>
+          <button class="filter-tag" data-filter="active">Active</button>
+          <button class="filter-tag" data-filter="queued">Queued</button>
+        </div>
+        
+        <div class="task-list" id="task-list">
+          <div class="task-empty">No tasks yet. Create one to get started!</div>
+        </div>
+      </section>
+      
+      <!-- Intelligence View -->
+      <section id="intelligence" class="view">
+        <header class="view-header">
+          <h1>Intelligence</h1>
+          <button id="scan-btn" class="neon-button" style="padding: 8px 16px; font-size: 13px;">Scan Now</button>
+        </header>
+        
+        <div class="filter-bar" id="ideas-filter-bar">
+          <button class="filter-tag active" data-filter="pending">Pending</button>
+          <button class="filter-tag" data-filter="implementing">Implementing</button>
+          <button class="filter-tag" data-filter="dismissed">Dismissed</button>
+        </div>
+        
+        <div class="ideas-list" id="ideas-list">
+          <div class="task-empty">No ideas yet. They'll appear as they're scanned.</div>
+        </div>
+      </section>
+      
+      <!-- Journal View -->
+      <section id="journal" class="view">
+        <header class="view-header">
+          <h1>Journal</h1>
+          <input type="date" id="journal-date" style="background: none; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px 10px; border-radius: 6px;">
+        </header>
+        
+        <div class="calendar-nav">
+          <button id="prev-day" class="calendar-btn">← Prev</button>
+          <span id="current-date" class="current-date"></span>
+          <button id="next-day" class="calendar-btn">Next →</button>
+        </div>
+        
+        <div class="journal-summary glass-card">
+          <h2 id="entry-title">Daily Summary</h2>
+          <div class="entry-stats">
+            <div class="stat">
+              <span class="label">Tasks</span>
+              <span class="value"><span id="stat-tasks">0</span> ✓</span>
+            </div>
+            <div class="stat">
+              <span class="label">Commits</span>
+              <span class="value"><span id="stat-commits">0</span></span>
+            </div>
+            <div class="stat">
+              <span class="label">Cost</span>
+              <span class="value">$<span id="stat-cost">0.00</span></span>
+            </div>
+          </div>
+          <p class="entry-summary" id="entry-summary"></p>
+        </div>
+        
+        <div class="journal-notes glass-card">
+          <h3>Notes</h3>
+          <div class="notes-list" id="notes-list"></div>
+          <div class="note-input">
+            <textarea id="note-input" placeholder="Add a note..." style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 13px; resize: vertical; min-height: 60px;"></textarea>
+            <button id="note-add-btn" class="neon-button" style="margin-top: 8px; width: 100%;">Add Note</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Cron View -->
+      <section id="cron" class="view">
+        <header class="view-header">
+          <h1>Cron Jobs</h1>
+          <button class="neon-button" style="padding: 8px 14px; font-size: 12px;">+ New</button>
+        </header>
+        <div class="cron-list" id="cron-list">
+          <div class="task-empty">No cron jobs configured</div>
+        </div>
+      </section>
+      
+      <!-- API Usage View -->
+      <section id="api_usage" class="view">
+        <header class="view-header">
+          <h1>API Usage</h1>
+        </header>
+        <div class="budget-status glass-card">
+          <h2>Budget Status</h2>
+          <div class="budget-row">
+            <span>Today</span>
+            <div class="budget-bar"><div class="budget-fill" style="width: 3%"></div></div>
+            <span>$0.15 / $5.00</span>
+          </div>
+          <div class="budget-row">
+            <span>This Month</span>
+            <div class="budget-bar"><div class="budget-fill" style="width: 12%"></div></div>
+            <span>$23.45 / $200.00</span>
+          </div>
+        </div>
+        <div class="model-breakdown glass-card">
+          <h2>By Model</h2>
+          <div class="breakdown-table">
+            <div class="breakdown-row header">
+              <span>Model</span>
+              <span>Requests</span>
+              <span>Tokens</span>
+              <span>Cost</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Chat View -->
+      <section id="chat" class="view">
+        <header class="view-header">
+          <h1>Chat</h1>
+          <span class="connection-status" id="connection-status">Connecting...</span>
+        </header>
+        
+        <div class="chat-container">
+          <div class="messages-list" id="messages-list">
+            <div class="chat-empty">
+              <span class="empty-icon">💬</span>
+              <p>Start a conversation</p>
+              <span class="empty-hint">Send a message to connect with Bert</span>
+            </div>
+          </div>
+          
+          <div class="typing-indicator" id="typing-indicator" style="display:none">
+            <span class="typing-text">Bert is typing</span>
+            <span class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </div>
+          
+          <div class="chat-input-wrapper">
+            <div class="glass-card chat-input-container">
+              <input type="text" id="chat-input" placeholder="Message Bert..." autocomplete="off">
+              <button id="send-btn" class="send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

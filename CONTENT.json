@@ -1,0 +1,74 @@
+{
+  "app": {"name": "Mission Control", "tagline": "Your personal command center"},
+  "navigation": {
+    "overview": {"label": "Overview", "icon": "🏠"},
+    "workshop": {"label": "Workshop", "icon": "🛠️"},
+    "intelligence": {"label": "Intelligence", "icon": "🧠"},
+    "journal": {"label": "Journal", "icon": "📔"},
+    "cron": {"label": "Cron", "icon": "⏰"},
+    "api_usage": {"label": "API Usage", "icon": "📊"},
+    "chat": {"label": "Chat", "icon": "💬", "badge_new": "New"}
+  },
+  "overview": {
+    "header": {"title": "Mission Control", "status_online": "Online", "status_offline": "Offline"},
+    "cost_card": {"title": "Today's Cost", "label_today": "Today", "label_total": "Total spent", "progress_label": "of daily budget", "currency": "$"},
+    "trading_card": {"title": "Trading Bot", "label_equity": "Equity", "label_positions": "Positions", "status_idle": "Idle", "status_active": "Active", "status_error": "Error", "currency": "$"},
+    "tasks_card": {"title": "Tasks", "label_queued": "Queued", "label_active": "Active", "label_done": "Done"},
+    "activity_card": {"title": "Live Activity", "empty_state": "No recent activity", "time_now": "Just now", "time_minutes": "{n}m ago", "time_hours": "{n}h ago"}
+  },
+  "workshop": {
+    "header": {"title": "Workshop", "quick_add_placeholder": "Add task..."},
+    "filters": {"all": "All", "active": "Active", "queued": "Queued", "paused": "Paused", "completed": "Done", "failed": "Failed"},
+    "task_card": {"status_badge": "Status", "priority_high": "High", "priority_normal": "Normal", "priority_low": "Low"},
+    "empty_state": {"title": "No tasks yet", "message": "Create your first task to get started"}
+  },
+  "intelligence": {
+    "header": {"title": "Intelligence", "scan_btn": "Scan Now"},
+    "filters": {"pending": "Pending", "implementing": "Implementing", "dismissed": "Dismissed", "completed": "Done"},
+    "idea_card": {"confidence_label": "Confidence", "source_label": "Source", "sources": {"message": "Message", "code": "Code", "command": "Command", "manual": "Manual"}, "actions": {"implement": "Implement", "later": "Later", "dismiss": "Dismiss"}},
+    "empty_state": {"title": "No ideas yet", "message": "Ideas will appear as they're scanned from conversations and code"}
+  },
+  "journal": {
+    "header": {"title": "Journal", "date_label": "Date"},
+    "navigation": {"prev": "← Prev", "next": "Next →"},
+    "summary": {"title": "Daily Summary", "stats": {"tasks": "Tasks", "commits": "Commits", "cost": "Cost", "trades": "Trades"}},
+    "notes": {"title": "Notes", "placeholder": "Add a note...", "add_btn": "Add", "empty": "No notes yet"},
+    "search": {"placeholder": "Search journal...", "empty": "No results found"}
+  },
+  "cron": {
+    "header": {"title": "Cron Jobs", "add_btn": "+ New Job"},
+    "cron_card": {"status_label": "Status", "schedule_label": "Schedule", "next_label": "Next", "last_label": "Last", "actions": {"run": "Run Now", "edit": "Edit", "toggle": "Disable"}},
+    "modal": {"title": "Cron Job", "name_label": "Name", "schedule_label": "Schedule", "save_btn": "Save", "cancel_btn": "Cancel", "delete_btn": "Delete"},
+    "empty_state": {"title": "No cron jobs", "message": "Create your first scheduled task"}
+  },
+  "api_usage": {
+    "header": {"title": "API Usage"},
+    "budget_status": {"title": "Budget Status", "daily_label": "Today", "monthly_label": "This Month", "alert_75": "75% of budget used", "alert_90": "90% of budget used"},
+    "periods": {"daily": "Daily", "weekly": "Weekly", "monthly": "Monthly"},
+    "model_breakdown": {"title": "By Model", "columns": {"model": "Model", "requests": "Requests", "tokens": "Tokens", "cost": "Cost"}, "models": {"haiku": "Haiku", "sonnet": "Sonnet", "opus": "Opus", "kimi": "Kimi"}},
+    "empty_state": {"title": "No usage data", "message": "Usage will appear as requests are made"}
+  },
+  "chat": {
+    "header": {"title": "Chat", "status_connecting": "Connecting...", "status_online": "Bert is online", "status_offline": "Disconnected", "status_typing": "Bert is typing..."},
+    "input": {"placeholder": "Message Bert...", "button_send": "Send"},
+    "empty_state": {"title": "Start a conversation", "message": "Send a message to connect with Bert"},
+    "message_labels": {"you": "You", "bert": "Bert"}
+  },
+  "activities": {
+    "types": {
+      "git": {"icon": "📝", "default_title": "Code pushed"},
+      "task": {"icon": "✅", "default_title": "Task completed"},
+      "cost": {"icon": "💰", "default_title": "Cost alert"},
+      "trade": {"icon": "📈", "default_title": "Trade executed"},
+      "command": {"icon": "⌨️", "default_title": "Command run"},
+      "system": {"icon": "⚙️", "default_title": "System update"},
+      "idea": {"icon": "💡", "default_title": "Idea scanned"}
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "connection_lost": "Connection lost. Reconnecting...",
+    "send_failed": "Failed to send. Try again?",
+    "load_failed": "Could not load data"
+  }
+}

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mission-control-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    disk:
+      name: mission-control-db
+      mountPath: /opt/render/project/src/db
+      sizeGB: 1
