@@ -600,10 +600,12 @@ app.post('/api/sync', async (req, res) => {
   }
 });
 
-// Trading Bot Integration
+// Trading Bot Integration - Connected to Render deployment
+const TRADING_BOT_URL = 'https://paper-trading-bot-8eu2.onrender.com';
+
 app.get('/api/trading/account', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:3456/api/account');
+    const response = await fetch(`${TRADING_BOT_URL}/api/account`);
     const data = await response.json();
     res.json(data);
   } catch (e) {
@@ -613,7 +615,7 @@ app.get('/api/trading/account', async (req, res) => {
 
 app.get('/api/trading/positions', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:3456/api/positions');
+    const response = await fetch(`${TRADING_BOT_URL}/api/positions`);
     const data = await response.json();
     res.json(data);
   } catch (e) {
@@ -623,7 +625,7 @@ app.get('/api/trading/positions', async (req, res) => {
 
 app.get('/api/trading/stats', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:3456/api/stats');
+    const response = await fetch(`${TRADING_BOT_URL}/api/stats`);
     const data = await response.json();
     res.json(data);
   } catch (e) {
@@ -633,7 +635,7 @@ app.get('/api/trading/stats', async (req, res) => {
 
 app.get('/api/trading/config', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:3456/api/config');
+    const response = await fetch(`${TRADING_BOT_URL}/api/config`);
     const data = await response.json();
     res.json(data);
   } catch (e) {
