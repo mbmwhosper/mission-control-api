@@ -66,12 +66,15 @@ html, body {
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-around;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--glass-border);
   z-index: 100;
+  gap: 8px;
 }
 
 .nav-btn {
@@ -79,13 +82,15 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 8px 24px;
+  padding: 8px 16px;
   background: none;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .nav-btn.active { color: var(--accent-mint); }
