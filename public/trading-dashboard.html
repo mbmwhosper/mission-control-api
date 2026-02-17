@@ -283,6 +283,13 @@
     </div>
 
     <div class="section">
+      <h2 class="section-title">📈 Trade History</h2>
+      <div class="candidates-list" id="trades-container">
+        <div class="no-data">Loading trade history...</div>
+      </div>
+    </div>
+
+    <div class="section">
       <h2 class="section-title">🔍 Next Trade Candidates</h2>
       <div class="candidates-list" id="candidates-container">
         <div class="no-data">Analyzing market opportunities...</div>
@@ -378,6 +385,34 @@
             </div>
           </div>
         `).join('');
+      }
+
+      // Fetch and render trade history
+      try {
+        const tradesRes = await fetch(`${API_URL}/api/trading/trades`);
+        const trades = await tradesRes.json();
+        
+        if (trades && trades.length > 0) {
+          document.getElementById('trades-container').innerHTML = trades.slice(0, 10).map(t => `
+            <div class="candidate-item">
+              <div class="candidate-info">
+                <div class="candidate-symbol">${t.title}</div>
+                <div class="candidate-reason">${t.data.reason || t.description}</div>
+              </div>
+              <div class="candidate-stats">
+                <div class="change-${t.data.pnl >= 0 ? 'positive' : 'negative'}">
+                  ${t.data.pnl ? (t.data.pnl >= 0 ? '+' : '') + t.data.pnl.toFixed(2) : 'Pending'}
+                </div>
+                <div style="font-size: 0.85em; color: #aaa;">${new Date(t.created_at).toLocaleTimeString()}</div>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          document.getElementById('trades-container').innerHTML = 
+            '<div class="no-data">No trades yet...</div>';
+        }
+      } catch (e) {
+        console.log('Trades not available');
       }
 
       // Render candidates (from stats if available)

@@ -603,6 +603,49 @@ app.post('/api/sync', async (req, res) => {
 // Trading Bot Integration - Connected to Render deployment
 const TRADING_BOT_URL = 'https://paper-trading-bot-8eu2.onrender.com';
 
+// Log trades from trading agent
+app.post('/api/trading/log-trade', async (req, res) => {
+  try {
+    const { symbol, action, qty, price, reason, expectedPnl, pnl, percentGain } = req.body;
+    const trade = {
+      type: 'trade',
+      title: `${action.toUpperCase()} ${qty} ${symbol} @ $${price}`,
+      description: reason || 'Trade executed',
+      data: { symbol, action, qty, price, expectedPnl, pnl, percentGain },
+      timestamp: new Date().toISOString()
+    };
+    
+    db.run(
+      `INSERT INTO activities (type, title, description, data, created_at) VALUES (?, ?, ?, ?, ?)`,
+      [trade.type, trade.title, trade.description, JSON.stringify(trade.data), trade.timestamp],
+      (err) => {
+        if (err) res.status(500).json({ error: err.message });
+        else res.json({ success: true, trade });
+      }
+    );
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Get all trades for dashboard
+app.get('/api/trading/trades', async (req, res) => {
+  try {
+    db.all(
+      `SELECT * FROM activities WHERE type = 'trade' ORDER BY created_at DESC LIMIT 50`,
+      (err, trades) => {
+        if (err) res.status(500).json({ error: err.message });
+        else res.json(trades.map(t => ({
+          ...t,
+          data: JSON.parse(t.data || '{}')
+        })));
+      }
+    );
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 app.get('/api/trading/account', async (req, res) => {
   try {
     const response = await fetch(`${TRADING_BOT_URL}/api/account`);
